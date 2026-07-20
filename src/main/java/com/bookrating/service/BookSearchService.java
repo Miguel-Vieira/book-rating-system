@@ -3,6 +3,7 @@ package com.bookrating.service;
 import com.bookrating.gateway.gutendex.GutendexBook;
 import com.bookrating.gateway.gutendex.GutendexClient;
 import com.bookrating.gateway.gutendex.GutendexSearchResponse;
+import com.bookrating.service.dto.AuthorDto;
 import com.bookrating.service.dto.BookSearchResultDto;
 import com.bookrating.service.dto.SearchResponseDto;
 import com.bookrating.utils.exceptions.BookNotFoundException;
@@ -61,10 +62,13 @@ public class BookSearchService {
     }
 
     private BookSearchResultDto toSearchResult(GutendexBook book) {
+        var authors = book.authors() != null
+                ? book.authors().stream().map(a -> new AuthorDto(a.name(), a.birthYear(), a.deathYear())).toList()
+                : List.<AuthorDto>of();
         return new BookSearchResultDto(
                 book.id(),
                 book.title(),
-                book.authors() != null ? book.authors() : List.of(),
+                authors,
                 book.languages() != null ? book.languages() : List.of(),
                 book.downloadCount());
     }

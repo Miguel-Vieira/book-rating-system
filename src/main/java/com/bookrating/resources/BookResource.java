@@ -5,7 +5,6 @@ import com.bookrating.service.dto.SearchResponseDto;
 import com.bookrating.service.dto.TopBookDto;
 import com.bookrating.service.BookDetailsService;
 import com.bookrating.service.BookSearchService;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.*;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @Path("/api/books")
 @Produces(MediaType.APPLICATION_JSON)
-@ApplicationScoped
 public class BookResource {
 
     @Inject

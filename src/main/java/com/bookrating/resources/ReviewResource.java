@@ -4,7 +4,6 @@ import com.bookrating.service.dto.CreateReviewRequest;
 import com.bookrating.service.dto.MonthlyRatingDto;
 import com.bookrating.service.dto.ReviewDto;
 import com.bookrating.service.ReviewService;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -17,7 +16,6 @@ import java.util.List;
 @Path("/api/books/{bookId}")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@ApplicationScoped
 public class ReviewResource {
 
     @Inject
@@ -33,8 +31,10 @@ public class ReviewResource {
 
     @GET
     @Path("/reviews")
-    public List<ReviewDto> getReviews(@PathParam("bookId") @Min(1) long bookId) {
-        return reviewService.getReviewsForBook(bookId);
+    public List<ReviewDto> getReviews(@PathParam("bookId") @Min(1) long bookId,
+                                      @QueryParam("page") @DefaultValue("1") @Min(1) int page,
+                                      @QueryParam("size") @DefaultValue("20") @Min(1) int size) {
+        return reviewService.getReviewsForBook(bookId, page, Math.min(size, 100));
     }
 
     @GET

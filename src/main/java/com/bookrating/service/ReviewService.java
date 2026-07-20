@@ -20,10 +20,14 @@ public class ReviewService {
     @Inject
     BookSearchService bookSearchService;
 
-    @Transactional
     public ReviewDto createReview(long bookId, CreateReviewRequest request) {
+        // validate book exists before opening a transaction
         bookSearchService.getBook(bookId);
+        return persistReview(bookId, request);
+    }
 
+    @Transactional
+    ReviewDto persistReview(long bookId, CreateReviewRequest request) {
         var entity = ReviewEntity.builder()
                 .bookId(bookId)
                 .rating(request.rating())
@@ -31,6 +35,13 @@ public class ReviewService {
                 .build();
         reviewRepository.persist(entity);
         return toDto(entity);
+    }
+
+    @Transactional
+    public List<ReviewDto> getReviewsForBook(long bookId, int page, int size) {
+        return reviewRepository.findByBookId(bookId, page, size).stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional
@@ -47,20 +58,7 @@ public class ReviewService {
 
     @Transactional
     public List<MonthlyRatingDto> getMonthlyRatings(long bookId) {
-        List<ReviewEntity> reviews = reviewRepository.findByBookId(bookId);
-        if (reviews.isEmpty()) {
-            return List.of();
-        }
-        return reviews.stream()
-                .collect(java.util.stream.Collectors.groupingBy(
-                        r -> r.getCreatedAt().getYear() + "-" + String.format("%02d", r.getCreatedAt().getMonthValue())))
-                .entrySet().stream()
-                .map(entry -> new MonthlyRatingDto(
-                        entry.getKey(),
-                        entry.getValue().stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0),
-                        entry.getValue().size()))
-                .sorted((a, b) -> b.month().compareTo(a.month()))
-                .toList();
+        return reviewRepository.getMonthlyRatings(bookId);
     }
 
     private ReviewDto toDto(ReviewEntity entity) {

@@ -1,6 +1,7 @@
 package com.bookrating.service;
 
 import com.bookrating.gateway.gutendex.GutendexBook;
+import com.bookrating.service.dto.AuthorDto;
 import com.bookrating.service.dto.BookDetailsDto;
 import com.bookrating.service.dto.ReviewDto;
 import com.bookrating.service.dto.TopBookDto;
@@ -38,7 +39,7 @@ public class BookDetailsService {
         return new BookDetailsDto(
                 book.id(),
                 book.title(),
-                Objects.requireNonNullElse(book.authors(), Collections.emptyList()),
+                mapAuthors(book),
                 Objects.requireNonNullElse(book.languages(), Collections.emptyList()),
                 book.downloadCount(),
                 Math.round(avg * 100.0) / 100.0,
@@ -46,9 +47,10 @@ public class BookDetailsService {
         );
     }
 
-    @Transactional
     public List<TopBookDto> getTopBooks(int limit) {
-        return reviewRepository.getTopRatedBooks(limit).stream()
+        List<Object[]> rows = queryTopRated(limit);
+        // map titles outside the transaction to avoid holding DB connection during HTTP calls
+        return rows.stream()
                 .map(row -> {
                     long bookId = ((Number) row[0]).longValue();
                     double avg = ((Number) row[1]).doubleValue();
@@ -58,6 +60,11 @@ public class BookDetailsService {
                 .toList();
     }
 
+    @Transactional
+    List<Object[]> queryTopRated(int limit) {
+        return reviewRepository.getTopRatedBooks(limit);
+    }
+
     private String fetchTitle(long bookId) {
         try {
             return bookSearchService.getBook(bookId).title();
@@ -65,5 +72,12 @@ public class BookDetailsService {
             LOG.warnf("Could not fetch title for book %d: %s", bookId, e.getMessage());
             return null;
         }
+    }
+
+    private List<AuthorDto> mapAuthors(GutendexBook book) {
+        if (book.authors() == null) return Collections.emptyList();
+        return book.authors().stream()
+                .map(a -> new AuthorDto(a.name(), a.birthYear(), a.deathYear()))
+                .toList();
     }
 }
