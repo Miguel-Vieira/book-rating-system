@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  book-rating-api:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - book-data:/app/data
+    environment:
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:sqlite:/app/data/bookrating.db
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/q/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  book-data:

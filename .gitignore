@@ -1,0 +1,60 @@
+
+# Eclipse
+# IntelliJ
+# Local Copilot links from Symphonix (do not commit)
+# Local environment
+# NetBeans
+# OSX
+# Plugin directory
+# TLS Certificates
+# Vim
+# Visual Studio Code
+# patch
+#Maven
+*.iml
+*.ipr
+*.iws
+*.orig
+*.rej
+*.swo
+*.swp
+.DS_Store
+.certs/
+.classpath
+.env
+.factorypath
+.flattened-pom.xml
+.github/agents
+.github/instructions
+.github/mcp.json
+.github/prompts
+.github/skills
+.idea
+.project
+.settings/
+.vscode
+/.quarkus/cli/plugins/
+bin/
+nb-configuration.xml
+pom.xml.releaseBackup
+pom.xml.tag
+pom.xml.versionsBackup
+release.properties
+target/
+
+# SQLite
+*.db
+*.sqlite
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Local Copilot
+.github/agents
+.github/skills
+.github/instructions
+.github/prompts
+.github/mcp.json
+.github/pipeline-artifacts/sessions/
