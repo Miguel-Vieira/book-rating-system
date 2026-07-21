@@ -1,20 +1,22 @@
 package com.bookrating.utils.exceptions;
 
+import jakarta.ws.rs.core.Response;
+
 public abstract class BookRatingException extends RuntimeException {
 
-    private final int statusCode;
+    private final Response.Status status;
 
-    protected BookRatingException(int statusCode, String message) {
+    protected BookRatingException(Response.Status status, String message) {
         super(message);
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    protected BookRatingException(int statusCode, String message, Throwable cause) {
+    protected BookRatingException(Response.Status status, String message, Throwable cause) {
         super(message, cause);
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public Response.Status getStatus() {
+        return status;
     }
 }
