@@ -5,7 +5,6 @@ import com.bookrating.service.dto.AuthorDto;
 import com.bookrating.service.dto.BookDetailsDto;
 import com.bookrating.service.dto.ReviewDto;
 import com.bookrating.service.dto.TopBookDto;
-import com.bookrating.domain.repository.ReviewRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -26,9 +25,6 @@ public class BookDetailsService {
     @Inject
     ReviewService reviewService;
 
-    @Inject
-    ReviewRepository reviewRepository;
-
     public BookDetailsDto getBookDetails(long bookId) {
         GutendexBook book = bookSearchService.getBook(bookId);
         List<ReviewDto> reviews = reviewService.getReviewsForBook(bookId);
@@ -47,7 +43,7 @@ public class BookDetailsService {
 
     @Transactional
     public List<TopBookDto> getTopBooks(int limit) {
-        return reviewRepository.getTopRatedBooks(limit).stream()
+        return reviewService.getTopRatedBooks(limit).stream()
                 .map(row -> {
                     long bookId = ((Number) row[0]).longValue();
                     double avg = ((Number) row[1]).doubleValue();

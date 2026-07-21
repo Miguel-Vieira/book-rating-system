@@ -56,8 +56,13 @@ public class ReviewService {
     }
 
     @Transactional
+    public List<Object[]> getTopRatedBooks(int limit) {
+        return reviewRepository.getTopRatedBooks(limit);
+    }
+
+    @Transactional
     public List<MonthlyRatingDto> getMonthlyRatings(long bookId) {
-        List<ReviewEntity> reviews = reviewRepository.findByBookIdAll(bookId);
+        List<ReviewEntity> reviews = reviewRepository.findByBookId(bookId);
         if (reviews.isEmpty()) {
             return List.of();
         }
@@ -78,4 +83,3 @@ public class ReviewService {
         return new ReviewDto(entity.id, entity.getBookId(), entity.getRating(), entity.getReview(), entity.getCreatedAt());
     }
 }
-

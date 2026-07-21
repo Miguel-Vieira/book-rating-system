@@ -27,7 +27,7 @@ public class BookResource {
     public SearchResponseDto searchBooks(
             @QueryParam("title") @NotBlank(message = "Query parameter 'title' is required") String title,
             @QueryParam("page") @DefaultValue("1") @Positive int page) {
-        return bookSearchService.searchBooks(title.trim(), page);
+        return bookSearchService.searchBooks(title, page);
     }
 
     @GET

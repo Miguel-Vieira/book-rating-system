@@ -38,7 +38,7 @@ class ReviewServiceTest {
         var jan2 = review(84L, 2, LocalDateTime.of(2025, 1, 20, 15, 0));
         var feb1 = review(84L, 5, LocalDateTime.of(2025, 2, 5, 9, 0));
 
-        when(reviewRepository.findByBookIdAll(84L)).thenReturn(List.of(jan1, jan2, feb1));
+        when(reviewRepository.findByBookId(84L)).thenReturn(List.of(jan1, jan2, feb1));
 
         List<MonthlyRatingDto> result = reviewService.getMonthlyRatings(84L);
 
@@ -55,7 +55,7 @@ class ReviewServiceTest {
 
     @Test
     void monthlyRatingsEmptyWhenNoReviews() {
-        when(reviewRepository.findByBookIdAll(999L)).thenReturn(List.of());
+        when(reviewRepository.findByBookId(999L)).thenReturn(List.of());
 
         List<MonthlyRatingDto> result = reviewService.getMonthlyRatings(999L);
 

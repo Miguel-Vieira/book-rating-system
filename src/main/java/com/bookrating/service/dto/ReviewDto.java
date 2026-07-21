@@ -1,11 +1,12 @@
 package com.bookrating.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public record ReviewDto(
         Long id,
-        long bookId,
+        @JsonProperty("book_id") long bookId,
         int rating,
         String review,
-        LocalDateTime createdAt
+        @JsonProperty("created_at") LocalDateTime createdAt
 ) {}

@@ -18,7 +18,7 @@ class ReviewResourceTest {
                 .when().post("/api/books/1342/reviews")
                 .then()
                 .statusCode(201)
-                .body("bookId", equalTo(1342))
+                .body("book_id", equalTo(1342))
                 .body("rating", equalTo(4))
                 .body("review", equalTo("Witty and sharp, Austen at her best"))
                 .body("id", notNullValue());
@@ -94,6 +94,6 @@ class ReviewResourceTest {
                 .statusCode(200)
                 .body("$", hasSize(greaterThanOrEqualTo(1)))
                 .body("[0].month", notNullValue())
-                .body("[0].averageRating", notNullValue());
+                .body("[0].average_rating", notNullValue());
     }
 }

@@ -3,6 +3,7 @@ package com.bookrating.domain.repository;
 import com.bookrating.domain.ReviewEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
@@ -11,11 +12,11 @@ import java.util.List;
 public class ReviewRepository implements PanacheRepository<ReviewEntity> {
 
     public List<ReviewEntity> findByBookId(long bookId) {
-        return list("bookId", bookId);
+        return list("bookId", Sort.by("id"), bookId);
     }
 
     public List<ReviewEntity> findByBookId(long bookId, int page, int size) {
-        return find("bookId", bookId)
+        return find("bookId", Sort.by("id"), bookId)
                 .page(Page.of(page - 1, size))
                 .list();
     }
@@ -38,9 +39,5 @@ public class ReviewRepository implements PanacheRepository<ReviewEntity> {
                         Object[].class)
                 .setMaxResults(limit)
                 .getResultList();
-    }
-
-    public List<ReviewEntity> findByBookIdAll(long bookId) {
-        return list("bookId", bookId);
     }
 }

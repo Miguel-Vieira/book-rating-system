@@ -17,7 +17,7 @@ class BookResourceTest {
                 .when().get("/api/books")
                 .then()
                 .statusCode(200)
-                .body("totalResults", greaterThanOrEqualTo(1))
+                .body("total_results", greaterThanOrEqualTo(1))
                 .body("books[0].title", equalTo("Frankenstein"))
                 .body("books[0].authors[0].name", equalTo("Shelley, Mary Wollstonecraft"));
     }

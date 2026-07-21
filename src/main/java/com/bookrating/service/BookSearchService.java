@@ -31,7 +31,7 @@ public class BookSearchService {
     @CacheResult(cacheName = "gutendex-search")
     public SearchResponseDto searchBooks(String title, int page) {
         try {
-            GutendexSearchResponse response = gutendexClient.searchBooks(title, page);
+            GutendexSearchResponse response = gutendexClient.searchBooks(title.trim(), page);
             List<BookSearchResultDto> books = response.results().stream()
                     .map(this::toSearchResult)
                     .toList();

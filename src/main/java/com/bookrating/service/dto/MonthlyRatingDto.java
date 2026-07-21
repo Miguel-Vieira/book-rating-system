@@ -1,7 +1,9 @@
 package com.bookrating.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record MonthlyRatingDto(
         String month,
-        double averageRating,
-        long reviewCount
+        @JsonProperty("average_rating") double averageRating,
+        @JsonProperty("review_count") long reviewCount
 ) {}
