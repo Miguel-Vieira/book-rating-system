@@ -58,7 +58,21 @@ public class ReviewService {
 
     @Transactional
     public List<MonthlyRatingDto> getMonthlyRatings(long bookId) {
-        return reviewRepository.getMonthlyRatings(bookId);
+        List<ReviewEntity> reviews = reviewRepository.findByBookIdAll(bookId);
+        if (reviews.isEmpty()) {
+            return List.of();
+        }
+        // SQLite stores LocalDateTime as epoch — can't use SQL date functions, so group in Java
+        return reviews.stream()
+                .collect(java.util.stream.Collectors.groupingBy(
+                        r -> r.getCreatedAt().getYear() + "-" + String.format("%02d", r.getCreatedAt().getMonthValue())))
+                .entrySet().stream()
+                .map(e -> new MonthlyRatingDto(
+                        e.getKey(),
+                        e.getValue().stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0),
+                        e.getValue().size()))
+                .sorted((a, b) -> b.month().compareTo(a.month()))
+                .toList();
     }
 
     private ReviewDto toDto(ReviewEntity entity) {

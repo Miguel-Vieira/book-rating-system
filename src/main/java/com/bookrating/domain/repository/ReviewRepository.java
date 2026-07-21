@@ -1,7 +1,6 @@
 package com.bookrating.domain.repository;
 
 import com.bookrating.domain.ReviewEntity;
-import com.bookrating.service.dto.MonthlyRatingDto;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -41,24 +40,7 @@ public class ReviewRepository implements PanacheRepository<ReviewEntity> {
                 .getResultList();
     }
 
-    @SuppressWarnings("unchecked")
-    public List<MonthlyRatingDto> getMonthlyRatings(long bookId) {
-        // SQLite stores LocalDateTime as epoch numeric — group in Java via JPQL year/month extraction isn't supported,
-        // so we pull minimal data and group. But since Hibernate maps to Java types, we can use FUNCTION for strftime.
-        // Fallback: use Java grouping on just the fields we need.
-        List<ReviewEntity> reviews = list("bookId", bookId);
-        if (reviews.isEmpty()) {
-            return List.of();
-        }
-        return reviews.stream()
-                .collect(java.util.stream.Collectors.groupingBy(
-                        r -> r.getCreatedAt().getYear() + "-" + String.format("%02d", r.getCreatedAt().getMonthValue())))
-                .entrySet().stream()
-                .map(e -> new MonthlyRatingDto(
-                        e.getKey(),
-                        e.getValue().stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0),
-                        e.getValue().size()))
-                .sorted((a, b) -> b.month().compareTo(a.month()))
-                .toList();
+    public List<ReviewEntity> findByBookIdAll(long bookId) {
+        return list("bookId", bookId);
     }
 }
