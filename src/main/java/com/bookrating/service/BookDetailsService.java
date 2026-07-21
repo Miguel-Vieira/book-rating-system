@@ -49,7 +49,6 @@ public class BookDetailsService {
 
     public List<TopBookDto> getTopBooks(int limit) {
         List<Object[]> rows = queryTopRated(limit);
-        // map titles outside the transaction to avoid holding DB connection during HTTP calls
         return rows.stream()
                 .map(row -> {
                     long bookId = ((Number) row[0]).longValue();

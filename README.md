@@ -33,7 +33,7 @@ Swagger UI is at `/q/swagger-ui` in dev mode.
 {"rating": 4, "review": "Genuinely creepy, holds up surprisingly well"}
 ```
 
-Rating must be 0–5, review text required.
+Rating must be 0-5, review text required.
 
 ## Architecture
 

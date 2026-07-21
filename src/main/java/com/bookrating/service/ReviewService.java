@@ -21,7 +21,6 @@ public class ReviewService {
     BookSearchService bookSearchService;
 
     public ReviewDto createReview(long bookId, CreateReviewRequest request) {
-        // validate book exists before opening a transaction
         bookSearchService.getBook(bookId);
         return persistReview(bookId, request);
     }
@@ -62,7 +61,7 @@ public class ReviewService {
         if (reviews.isEmpty()) {
             return List.of();
         }
-        // SQLite stores LocalDateTime as epoch — can't use SQL date functions, so group in Java
+        // SQLite stores LocalDateTime as epoch, can't use SQL date functions
         return reviews.stream()
                 .collect(java.util.stream.Collectors.groupingBy(
                         r -> r.getCreatedAt().getYear() + "-" + String.format("%02d", r.getCreatedAt().getMonthValue())))
