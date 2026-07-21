@@ -7,17 +7,15 @@ import com.bookrating.service.dto.ReviewDto;
 import com.bookrating.service.dto.TopBookDto;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import org.jboss.logging.Logger;
+import lombok.extern.jbosslog.JBossLog;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@JBossLog
 @ApplicationScoped
 public class BookDetailsService {
-
-    private static final Logger LOG = Logger.getLogger(BookDetailsService.class);
 
     @Inject
     BookSearchService bookSearchService;
@@ -41,7 +39,6 @@ public class BookDetailsService {
         );
     }
 
-    @Transactional
     public List<TopBookDto> getTopBooks(int limit) {
         return reviewService.getTopRatedBooks(limit).stream()
                 .map(row -> {
@@ -57,7 +54,7 @@ public class BookDetailsService {
         try {
             return bookSearchService.getBook(bookId).title();
         } catch (Exception e) {
-            LOG.warnf("Could not fetch title for book %d: %s", bookId, e.getMessage());
+            log.warnf("Could not fetch title for book %d: %s", bookId, e.getMessage());
             return null;
         }
     }

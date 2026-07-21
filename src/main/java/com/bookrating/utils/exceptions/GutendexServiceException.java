@@ -1,11 +1,11 @@
 package com.bookrating.utils.exceptions;
 
-public class GutendexServiceException extends RuntimeException {
+public class GutendexServiceException extends BookRatingException {
     public GutendexServiceException(String message) {
-        super(message);
+        super(503, message);
     }
 
     public GutendexServiceException(String message, Throwable cause) {
-        super(message, cause);
+        super(503, message, cause);
     }
 }

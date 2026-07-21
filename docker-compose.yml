@@ -8,7 +8,7 @@ services:
     volumes:
       - book-data:/app/data
     environment:
-      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:sqlite:/app/data/bookrating.db
+      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:sqlite:/app/data/bookrating.db?busy_timeout=5000
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/q/health/ready"]
       interval: 10s

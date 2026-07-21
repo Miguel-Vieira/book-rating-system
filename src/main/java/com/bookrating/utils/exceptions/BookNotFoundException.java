@@ -1,7 +1,7 @@
 package com.bookrating.utils.exceptions;
 
-public class BookNotFoundException extends RuntimeException {
+public class BookNotFoundException extends BookRatingException {
     public BookNotFoundException(long bookId) {
-        super("Book not found with id: " + bookId);
+        super(404, "Book not found with id: " + bookId);
     }
 }

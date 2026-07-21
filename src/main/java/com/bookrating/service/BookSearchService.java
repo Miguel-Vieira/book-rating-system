@@ -13,15 +13,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
+import lombok.extern.jbosslog.JBossLog;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jboss.logging.Logger;
 
 import java.util.List;
 
+@JBossLog
 @ApplicationScoped
 public class BookSearchService {
-
-    private static final Logger LOG = Logger.getLogger(BookSearchService.class);
 
     @Inject
     @RestClient
@@ -37,10 +36,10 @@ public class BookSearchService {
                     .toList();
             return new SearchResponseDto(response.count(), page, books);
         } catch (WebApplicationException e) {
-            LOG.errorf("Gutendex returned %d for title='%s'", e.getResponse().getStatus(), title);
+            log.errorf("Gutendex returned %d for title='%s'", e.getResponse().getStatus(), title);
             throw new GutendexServiceException("Book search unavailable", e);
         } catch (ProcessingException e) {
-            LOG.errorf(e, "Connection error searching Gutendex for '%s'", title);
+            log.errorf(e, "Connection error searching Gutendex for '%s'", title);
             throw new GutendexServiceException("Book search unavailable", e);
         }
     }
@@ -53,10 +52,10 @@ public class BookSearchService {
             if (e.getResponse().getStatus() == 404) {
                 throw new BookNotFoundException(bookId);
             }
-            LOG.errorf("Gutendex returned %d for book %d", e.getResponse().getStatus(), bookId);
+            log.errorf("Gutendex returned %d for book %d", e.getResponse().getStatus(), bookId);
             throw new GutendexServiceException("Book service unavailable", e);
         } catch (ProcessingException e) {
-            LOG.errorf(e, "Connection error fetching book %d", bookId);
+            log.errorf(e, "Connection error fetching book %d", bookId);
             throw new GutendexServiceException("Book service unavailable", e);
         }
     }

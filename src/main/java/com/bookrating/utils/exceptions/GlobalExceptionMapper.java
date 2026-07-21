@@ -6,17 +6,19 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.Logger;
+import lombok.extern.jbosslog.JBossLog;
 
+@JBossLog
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
 
-    private static final Logger LOG = Logger.getLogger(GlobalExceptionMapper.class);
-
     @Override
     public Response toResponse(Exception exception) {
-        if (exception instanceof BookNotFoundException) {
-            return error(404, exception.getMessage());
+        if (exception instanceof BookRatingException bre) {
+            if (bre.getStatusCode() >= 500) {
+                log.error(bre.getMessage(), bre);
+            }
+            return error(bre.getStatusCode(), bre.getMessage());
         }
 
         if (exception instanceof ConstraintViolationException cve) {
@@ -29,16 +31,11 @@ public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
                     .build();
         }
 
-        if (exception instanceof GutendexServiceException) {
-            LOG.error("Gutendex API error", exception);
-            return error(503, "Book service temporarily unavailable");
-        }
-
         if (exception instanceof WebApplicationException wae) {
             return error(wae.getResponse().getStatus(), wae.getMessage());
         }
 
-        LOG.error("Unhandled exception", exception);
+        log.error("Unhandled exception", exception);
         return error(500, "Internal server error");
     }
 
