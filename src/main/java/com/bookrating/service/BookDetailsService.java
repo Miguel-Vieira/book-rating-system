@@ -32,9 +32,7 @@ public class BookDetailsService {
     public BookDetailsDto getBookDetails(long bookId) {
         GutendexBook book = bookSearchService.getBook(bookId);
         List<ReviewDto> reviews = reviewService.getReviewsForBook(bookId);
-
-        double avg = reviews.isEmpty() ? 0.0 :
-                reviews.stream().mapToInt(ReviewDto::rating).average().orElse(0.0);
+        double avg = reviewService.getAverageRating(bookId);
 
         return new BookDetailsDto(
                 book.id(),
@@ -47,9 +45,9 @@ public class BookDetailsService {
         );
     }
 
+    @Transactional
     public List<TopBookDto> getTopBooks(int limit) {
-        List<Object[]> rows = queryTopRated(limit);
-        return rows.stream()
+        return reviewRepository.getTopRatedBooks(limit).stream()
                 .map(row -> {
                     long bookId = ((Number) row[0]).longValue();
                     double avg = ((Number) row[1]).doubleValue();
@@ -57,11 +55,6 @@ public class BookDetailsService {
                     return new TopBookDto(bookId, Math.round(avg * 100.0) / 100.0, count, fetchTitle(bookId));
                 })
                 .toList();
-    }
-
-    @Transactional
-    List<Object[]> queryTopRated(int limit) {
-        return reviewRepository.getTopRatedBooks(limit);
     }
 
     private String fetchTitle(long bookId) {
