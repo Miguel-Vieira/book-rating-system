@@ -6,7 +6,8 @@ import com.bookrating.service.dto.TopBookDto;
 import com.bookrating.service.BookDetailsService;
 import com.bookrating.service.BookSearchService;
 import jakarta.inject.Inject;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -24,23 +25,20 @@ public class BookResource {
 
     @GET
     public SearchResponseDto searchBooks(
-            @QueryParam("title") String title,
-            @QueryParam("page") @DefaultValue("1") @Min(1) int page) {
-        if (title == null || title.isBlank()) {
-            throw new BadRequestException("Query parameter 'title' is required");
-        }
+            @QueryParam("title") @NotBlank(message = "Query parameter 'title' is required") String title,
+            @QueryParam("page") @DefaultValue("1") @Positive int page) {
         return bookSearchService.searchBooks(title.trim(), page);
     }
 
     @GET
     @Path("/{bookId}")
-    public BookDetailsDto getBookDetails(@PathParam("bookId") @Min(1) long bookId) {
+    public BookDetailsDto getBookDetails(@PathParam("bookId") @Positive long bookId) {
         return bookDetailsService.getBookDetails(bookId);
     }
 
     @GET
     @Path("/top")
-    public List<TopBookDto> getTopBooks(@QueryParam("limit") @DefaultValue("10") @Min(1) int limit) {
+    public List<TopBookDto> getTopBooks(@QueryParam("limit") @DefaultValue("10") @Positive int limit) {
         return bookDetailsService.getTopBooks(Math.min(limit, 100));
     }
 }

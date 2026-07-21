@@ -1,9 +1,7 @@
 package com.bookrating.gateway.gutendex;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public record GutendexSearchResponse(
         int count,
         String next,

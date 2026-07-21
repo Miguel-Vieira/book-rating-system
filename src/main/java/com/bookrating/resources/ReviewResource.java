@@ -6,7 +6,7 @@ import com.bookrating.service.dto.ReviewDto;
 import com.bookrating.service.ReviewService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -23,7 +23,7 @@ public class ReviewResource {
 
     @POST
     @Path("/reviews")
-    public Response createReview(@PathParam("bookId") @Min(1) long bookId,
+    public Response createReview(@PathParam("bookId") @Positive long bookId,
                                  @Valid CreateReviewRequest request) {
         ReviewDto review = reviewService.createReview(bookId, request);
         return Response.status(Response.Status.CREATED).entity(review).build();
@@ -31,15 +31,15 @@ public class ReviewResource {
 
     @GET
     @Path("/reviews")
-    public List<ReviewDto> getReviews(@PathParam("bookId") @Min(1) long bookId,
-                                      @QueryParam("page") @DefaultValue("1") @Min(1) int page,
-                                      @QueryParam("size") @DefaultValue("20") @Min(1) int size) {
+    public List<ReviewDto> getReviews(@PathParam("bookId") @Positive long bookId,
+                                      @QueryParam("page") @DefaultValue("1") @Positive int page,
+                                      @QueryParam("size") @DefaultValue("20") @Positive int size) {
         return reviewService.getReviewsForBook(bookId, page, Math.min(size, 100));
     }
 
     @GET
     @Path("/ratings/monthly")
-    public List<MonthlyRatingDto> getMonthlyRatings(@PathParam("bookId") @Min(1) long bookId) {
+    public List<MonthlyRatingDto> getMonthlyRatings(@PathParam("bookId") @Positive long bookId) {
         return reviewService.getMonthlyRatings(bookId);
     }
 }
