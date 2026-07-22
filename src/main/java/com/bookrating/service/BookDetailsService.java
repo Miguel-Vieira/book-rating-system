@@ -5,6 +5,7 @@ import com.bookrating.service.dto.AuthorDto;
 import com.bookrating.service.dto.BookDetailsDto;
 import com.bookrating.service.dto.ReviewDto;
 import com.bookrating.service.dto.TopBookDto;
+import com.bookrating.utils.exceptions.BookNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.extern.jbosslog.JBossLog;
@@ -53,7 +54,8 @@ public class BookDetailsService {
     private String fetchTitle(long bookId) {
         try {
             return bookSearchService.getBook(bookId).title();
-        } catch (Exception e) {
+        } catch (BookNotFoundException e) {
+            // book was removed from Gutendex after being reviewed; omit the title
             log.warnf("Could not fetch title for book %d: %s", bookId, e.getMessage());
             return null;
         }

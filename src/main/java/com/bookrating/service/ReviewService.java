@@ -62,6 +62,7 @@ public class ReviewService {
 
     @Transactional
     public List<MonthlyRatingDto> getMonthlyRatings(long bookId) {
+        bookSearchService.getBook(bookId);
         List<ReviewEntity> reviews = reviewRepository.findByBookId(bookId);
         if (reviews.isEmpty()) {
             return List.of();

@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.jbosslog.JBossLog;
+import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.List;
@@ -41,6 +42,9 @@ public class BookSearchService {
         } catch (ProcessingException e) {
             log.errorf(e, "Connection error searching Gutendex for '%s'", title);
             throw new GutendexServiceException("Book search unavailable", e);
+        } catch (TimeoutException e) {
+            log.errorf(e, "Timeout searching Gutendex for '%s'", title);
+            throw new GutendexServiceException("Book search unavailable", e);
         }
     }
 
@@ -56,6 +60,9 @@ public class BookSearchService {
             throw new GutendexServiceException("Book service unavailable", e);
         } catch (ProcessingException e) {
             log.errorf(e, "Connection error fetching book %d", bookId);
+            throw new GutendexServiceException("Book service unavailable", e);
+        } catch (TimeoutException e) {
+            log.errorf(e, "Timeout fetching book %d", bookId);
             throw new GutendexServiceException("Book service unavailable", e);
         }
     }
