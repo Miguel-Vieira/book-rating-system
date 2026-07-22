@@ -146,6 +146,18 @@ Key properties in `application.properties`:
 
 Override via environment variables: `QUARKUS_DATASOURCE_JDBC_URL=jdbc:sqlite:/data/my.db`
 
+## Design Decisions
+
+**Why Quarkus?** Fast startup, built-in REST client with fault tolerance annotations, dev mode with hot reload. Felt like the right fit for a small focused API without the ceremony of Spring Boot.
+
+**Why SQLite?** Zero infrastructure to run. No need to install or configure a database server, the reviewer can `./mvnw quarkus:dev` and it just works. For production or concurrent writes I'd switch to Postgres.
+
+**Why in-memory cache instead of Redis?** Same reasoning: no external dependencies to start. Caffeine gives us what we need (TTL-based eviction) without extra setup.
+
+**Monthly ratings computed in Java, not SQL?** SQLite's date functions aren't accessible through Hibernate's query abstraction in a portable way. With Postgres I'd use `date_trunc` in a native query. For the expected data volume here it's fine.
+
+**Architecture (resource/service/domain/gateway)?** Clear separation of concerns without over-abstracting. Resources handle HTTP, services hold business logic, domain owns persistence, gateway wraps external calls. Each layer has a single responsibility.
+
 ## Stack
 
 - Java 21, Quarkus 3.37
