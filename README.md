@@ -30,7 +30,7 @@ The app starts on `http://localhost:8080`. Swagger UI available at `/q/swagger-u
 ./mvnw verify
 ```
 
-Tests use a mock Gutendex client (no network calls). SQLite DB is created/destroyed per test run.
+Tests use a mock Gutendex client (no network calls) and an in-memory SQLite database.
 
 ## API
 
