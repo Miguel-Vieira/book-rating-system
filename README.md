@@ -37,8 +37,8 @@ Tests use a mock Gutendex client (no network calls). SQLite DB is created/destro
 ### Search books
 
 ```bash
-curl "http://localhost:8080/api/books?title=frankenstein"
-curl "http://localhost:8080/api/books?title=shakespeare&page=2"
+curl -s "http://localhost:8080/api/books?title=frankenstein" | jq .
+curl -s "http://localhost:8080/api/books?title=shakespeare&page=2" | jq .
 ```
 
 Returns paginated results from Gutendex. The `page` param maps directly to Gutendex's pagination (32 results per page).
@@ -46,7 +46,7 @@ Returns paginated results from Gutendex. The `page` param maps directly to Guten
 ### Get book details
 
 ```bash
-curl http://localhost:8080/api/books/84
+curl -s http://localhost:8080/api/books/84 | jq .
 ```
 
 Combines Gutendex metadata with locally stored reviews. Returns average rating and review texts.
@@ -54,9 +54,9 @@ Combines Gutendex metadata with locally stored reviews. Returns average rating a
 ### Submit a review
 
 ```bash
-curl -X POST http://localhost:8080/api/books/84/reviews \
+curl -s -X POST http://localhost:8080/api/books/84/reviews \
   -H "Content-Type: application/json" \
-  -d '{"rating": 4, "review": "Genuinely creepy, holds up surprisingly well"}'
+  -d '{"rating": 4, "review": "Genuinely creepy, holds up surprisingly well"}' | jq .
 ```
 
 Rating must be 0-5 (integer). Review text is required, max 5000 chars. The book must exist on Gutendex.
@@ -64,7 +64,7 @@ Rating must be 0-5 (integer). Review text is required, max 5000 chars. The book 
 ### List reviews (paginated)
 
 ```bash
-curl "http://localhost:8080/api/books/84/reviews?page=1&size=10"
+curl -s "http://localhost:8080/api/books/84/reviews?page=1&size=10" | jq .
 ```
 
 Note: this endpoint is not in the original spec. Added as a convenience for paginated access to a book's reviews (the details endpoint returns all reviews unpaginated).
@@ -72,7 +72,7 @@ Note: this endpoint is not in the original spec. Added as a convenience for pagi
 ### Top rated books
 
 ```bash
-curl "http://localhost:8080/api/books/top?limit=5"
+curl -s "http://localhost:8080/api/books/top?limit=5" | jq .
 ```
 
 Returns books ranked by average rating. Only books with at least one review appear. Limit defaults to 10, max 100.
@@ -80,7 +80,7 @@ Returns books ranked by average rating. Only books with at least one review appe
 ### Monthly rating breakdown
 
 ```bash
-curl http://localhost:8080/api/books/84/ratings/monthly
+curl -s http://localhost:8080/api/books/84/ratings/monthly | jq .
 ```
 
 Returns average rating per month for a book, sorted newest first.
