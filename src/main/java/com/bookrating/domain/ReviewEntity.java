@@ -38,7 +38,7 @@ public class ReviewEntity extends PanacheEntity {
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+            createdAt = LocalDateTime.now().truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
         }
     }
 }

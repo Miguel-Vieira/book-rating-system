@@ -74,7 +74,7 @@ public class ReviewService {
                 .entrySet().stream()
                 .map(e -> new MonthlyRatingDto(
                         e.getKey(),
-                        e.getValue().stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0),
+                        Math.round(e.getValue().stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0) * 100.0) / 100.0,
                         e.getValue().size()))
                 .sorted((a, b) -> b.month().compareTo(a.month()))
                 .toList();
