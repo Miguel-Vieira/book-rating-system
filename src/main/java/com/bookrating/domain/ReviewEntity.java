@@ -3,7 +3,6 @@ package com.bookrating.domain;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -16,9 +15,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reviews", indexes = {
-        @Index(name = "idx_reviews_book_id", columnList = "book_id")
-})
+@Table(name = "reviews")
 @Getter
 @Setter
 @NoArgsConstructor

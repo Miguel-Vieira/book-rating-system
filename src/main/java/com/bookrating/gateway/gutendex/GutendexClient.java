@@ -8,7 +8,7 @@ import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@Path("/books")
+@Path("/books/")
 @RegisterRestClient
 public interface GutendexClient {
 
@@ -19,7 +19,7 @@ public interface GutendexClient {
                                        @QueryParam("page") Integer page);
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/")
     @Timeout(5000)
     @Retry(maxRetries = 2, delay = 500)
     GutendexBook getBook(@PathParam("id") long id);
