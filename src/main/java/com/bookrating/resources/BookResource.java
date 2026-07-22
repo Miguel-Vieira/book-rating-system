@@ -39,6 +39,6 @@ public class BookResource {
     @GET
     @Path("/top")
     public List<TopBookDto> getTopBooks(@QueryParam("limit") @DefaultValue("10") @Positive int limit) {
-        return bookDetailsService.getTopBooks(Math.min(limit, 20));
+        return bookDetailsService.getTopBooks(Math.min(limit, 100));
     }
 }
