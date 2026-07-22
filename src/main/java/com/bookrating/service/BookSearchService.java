@@ -37,6 +37,10 @@ public class BookSearchService {
                     .toList();
             return new SearchResponseDto(response.count(), page, books);
         } catch (WebApplicationException e) {
+            if (e.getResponse().getStatus() == 404) {
+                // Gutendex returns 404 for out-of-range page numbers; treat as "no results on this page"
+                return new SearchResponseDto(0, page, List.of());
+            }
             log.errorf("Gutendex returned %d for title='%s'", e.getResponse().getStatus(), title);
             throw new GutendexServiceException("Book search unavailable", e);
         } catch (ProcessingException e) {
