@@ -27,7 +27,7 @@ public class BookResource {
     public SearchResponseDto searchBooks(
             @QueryParam("title") @NotBlank(message = "Query parameter 'title' is required") String title,
             @QueryParam("page") @DefaultValue("1") @Positive int page) {
-        return bookSearchService.searchBooks(title, page);
+        return bookSearchService.searchBooks(title.trim(), page);
     }
 
     @GET
@@ -39,6 +39,6 @@ public class BookResource {
     @GET
     @Path("/top")
     public List<TopBookDto> getTopBooks(@QueryParam("limit") @DefaultValue("10") @Positive int limit) {
-        return bookDetailsService.getTopBooks(Math.min(limit, 100));
+        return bookDetailsService.getTopBooks(Math.min(limit, 20));
     }
 }
