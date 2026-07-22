@@ -114,14 +114,6 @@ com.bookrating/
     exceptions/    Global error handling
 ```
 
-```mermaid
-graph LR
-    Client --> API[Quarkus REST API]
-    API --> Cache[Caffeine Cache]
-    Cache --> Gutendex[gutendex.com]
-    API --> SQLite[(SQLite)]
-```
-
 ### Caching
 
 Gutendex responses are cached in-memory (Caffeine):
